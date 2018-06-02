@@ -1,19 +1,64 @@
-import React from 'react';
+import React from 'react'
+import { connect } from 'react-redux'
 
-export default class StatusArea extends React.Component {
+import { addMessage } from '../actions/Message'
+
+class StatusArea extends React.Component {
+	constructor(props) {
+	  super(props);
+	
+	  this.state = {
+	  	username: '',
+	  	message: ''
+	  }
+
+	  this.handleChange = this.handleChange.bind(this)
+	}
+
+	handleChange(e){
+		const target = e.target
+
+		this.setState({
+			[target.name]: target.value
+		});
+	}
+
 	render() {
+		const { username, message } = this.state
+		const { addMessage } = this.props		
+
 		return (
-			<form>
+			<div>
 			  <div className="form-group">
 			    <label htmlFor="username">Username</label>
-			    <input type="text" className="form-control" id="username" placeholder="Enter username" />
+			    <input 
+			    	type="text" 
+			    	className="form-control" 
+			    	name="username"
+			    	placeholder="Enter username"
+			    	value={username}
+			    	onChange={this.handleChange} />
 			  </div>
 			  <div className="form-group">
-			    <label htmlFor="exampleInputPassword1">Status</label>
-			    <textarea className="form-control"></textarea>
+			    <label htmlFor="message">Status</label>
+			    <textarea name="message" className="form-control" defaultValue={message} onChange={this.handleChange}></textarea>
 			  </div>
-			  <button type="submit" className="btn btn-primary">Submit</button>
-			</form>
+			  <button type="button" className="btn btn-primary" onClick={() => addMessage(this.state)}>Submit</button>
+			</div>
 		);
 	}
 }
+
+const mapStateToProps = state => {
+  return {}
+}
+
+const mapDispatchToProps = dispatch => {
+	return {
+		addMessage: message => {
+			dispatch(addMessage(message))
+		}
+	}
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(StatusArea)
